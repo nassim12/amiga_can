@@ -9,7 +9,7 @@ Developed at the **Precision Agriculture Laboratory, Central State University**.
 ## System overview
 
 ```
-navigate.py / joystick (F710)
+(navigate.py) or / joystick (F710) current method
     └─ /cmd_vel  (geometry_msgs/Twist)
          └─ amiga_twist_to_can  (ROS node, 20 Hz heartbeat)
               └─ SocketCAN  (can0, 250 kbps)
@@ -186,15 +186,6 @@ python3 scripts/amiga_can_sniffer.py --filter 0x20E
 - Watchdog triggered: navigation policy publish rate dropped below heartbeat tolerance
 - Reduce watchdog timeout: `roslaunch amiga_can amiga_can.launch watchdog_timeout:=1.0`
 
----
-
-## Citation
-
-If you use this package in academic work, please cite:
-
-```
-Bessaad, N. et al. (2026). Low-cost autonomous navigation for agricultural robots
-using VI-SLAM and diffusion policy. Central State University Precision Agriculture Lab.
 ```
 
 ## License
