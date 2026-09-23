@@ -1,0 +1,38 @@
+<!-- amiga_sniffer.launch
+     Sniff the Amiga CAN bus and print all frames to the terminal.
+
+     Usage (basic — show all frames):
+       roslaunch amiga_can amiga_sniffer.launch
+
+     Show only the dashboard status broadcast (TPDO1):
+       roslaunch amiga_can amiga_sniffer.launch filter_id:=0x18E
+
+     Show only the velocity command frames (RPDO1):
+       roslaunch amiga_can amiga_sniffer.launch filter_id:=0x20E
+
+     Expected output when Amiga is on and idle:
+       HH:MM:SS.mmm  ID=0x18E  DLC=8  01 00 00 00 00 ...  | Amiga TPDO1  state=IDLE  ...
+       HH:MM:SS.mmm  ID=0x70E  DLC=1  05                    | NMT heartbeat  state=OPERATIONAL
+-->
+<launch>
+  <arg name="can_channel"   default="can0" />
+  <arg name="can_interface" default="socketcan" />
+  <arg name="can_bitrate"   default="250000" />
+  <!-- Filter to one CAN ID (decimal or hex string). -1 = show all. -->
+  <arg name="filter_id"     default="-1" />
+  <!-- Max terminal lines per second (prevents flood on a busy bus) -->
+  <arg name="max_print_hz"  default="50" />
+
+  <node
+    pkg    = "amiga_can"
+    type   = "amiga_can_sniffer.py"
+    name   = "amiga_can_sniffer"
+    output = "screen"
+  >
+    <param name="can_channel"   value="$(arg can_channel)" />
+    <param name="can_interface" value="$(arg can_interface)" />
+    <param name="can_bitrate"   value="$(arg can_bitrate)" />
+    <param name="filter_id"     value="$(arg filter_id)" />
+    <param name="max_print_hz"  value="$(arg max_print_hz)" />
+  </node>
+</launch>

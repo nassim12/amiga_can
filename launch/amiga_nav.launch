@@ -1,0 +1,34 @@
+<!-- amiga_nav.launch
+     Runs autonomous navigation (navigate.py) and relays /cmd_vel → /amiga/cmd_vel
+     so the official amiga_ros_bridge picks it up.
+
+     PREREQ: amiga_ros_bridge must be running first:
+       roslaunch amiga_ros_bridge amiga_ros_bridge.launch host:=<AMIGA_IP>
+
+     Usage:
+       roslaunch amiga_can amiga_nav.launch
+
+     navigate.py publishes to /cmd_vel; the relay forwards to /amiga/cmd_vel.
+     The CAN sniffer can optionally be started to verify on-wire traffic.
+-->
+<launch>
+  <!-- Relay /cmd_vel (navigate.py) → /amiga/cmd_vel (amiga_ros_bridge) -->
+  <node
+    pkg  = "topic_tools"
+    type = "relay"
+    name = "cmd_vel_relay"
+    args = "/cmd_vel /amiga/cmd_vel"
+  />
+
+  <!-- Optional: CAN sniffer for verification (TPDO1 / heartbeat monitoring) -->
+  <!-- Uncomment to start alongside navigation
+  <node
+    pkg    = "amiga_can"
+    type   = "amiga_can_sniffer.py"
+    name   = "amiga_can_sniffer"
+    output = "screen"
+  >
+    <param name="filter_id" value="-1" />
+  </node>
+  -->
+</launch>

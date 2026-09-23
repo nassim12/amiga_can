@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>amiga_can</name>
+  <version>0.2.0</version>
+  <description>
+    ROS Noetic bridge between the TAD-Policy / NoMaD-RED navigation policy
+    and the Farm-ng Amiga CAN bus via a Peak PCAN-USB adapter (SocketCAN).
+    Provides a heartbeat Twist-to-CAN bridge, CAN sniffer, keyboard teleop,
+    and joystick teleop.  Tested on Jetson AGX Orin + JetPack 5.x.
+  </description>
+
+  <maintainer email="nbessaad@centralstate.edu">Nassim Bessaad</maintainer>
+  <license>MIT</license>
+  <url type="repository">https://github.com/CSU-PrecisionAg/visualnav-transformer</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>rospy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>topic_tools</depend>
+
+  <!-- System / pip dependency (not catkin):
+       sudo pip3 install python-can
+       Peak driver: sudo modprobe peak_usb
+                    sudo ip link set can0 up type can bitrate 250000
+  -->
+  <export/>
+</package>

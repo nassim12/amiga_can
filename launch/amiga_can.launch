@@ -1,0 +1,30 @@
+<!-- amiga_can.launch
+     Launch the Twist → CAN bridge node on the Jetson AGX Orin.
+
+     Usage:
+       roslaunch amiga_can amiga_can.launch
+
+     Optional overrides:
+       roslaunch amiga_can amiga_can.launch can_channel:=can0 watchdog_timeout:=0.3
+-->
+<launch>
+  <node
+    pkg        = "amiga_can"
+    type       = "amiga_twist_to_can.py"
+    name       = "amiga_twist_to_can"
+    output     = "screen"
+    respawn    = "true"
+    respawn_delay = "2.0"
+  >
+    <!-- SocketCAN interface brought up by Peak Linux driver -->
+    <param name="can_interface"      value="socketcan" />
+    <param name="can_channel"        value="can0" />
+    <param name="can_bitrate"        value="250000" />
+
+    <!-- Topic published by the navigation policy node -->
+    <param name="cmd_vel_topic"      value="/cmd_vel" />
+
+    <!-- Stop robot if no cmd_vel received within this many seconds -->
+    <param name="watchdog_timeout"   value="0.5" />
+  </node>
+</launch>

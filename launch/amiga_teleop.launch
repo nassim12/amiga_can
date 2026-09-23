@@ -1,0 +1,29 @@
+<!-- amiga_teleop.launch
+     Keyboard teleop for the Amiga via the official ROS bridge.
+
+     PREREQ: amiga_ros_bridge must be running first:
+       roslaunch amiga_ros_bridge amiga_ros_bridge.launch host:=<AMIGA_IP>
+
+     Usage:
+       roslaunch amiga_can amiga_teleop.launch
+
+     For autonomous navigation (navigate.py → Amiga), relay /cmd_vel:
+       roslaunch amiga_can amiga_nav.launch
+-->
+<launch>
+  <arg name="cmd_vel_topic" default="/amiga/cmd_vel" />
+  <arg name="max_linear"    default="0.4" />
+  <arg name="rate_hz"       default="20.0" />
+
+  <node
+    pkg    = "amiga_can"
+    type   = "amiga_ros_teleop.py"
+    name   = "amiga_ros_teleop"
+    output = "screen"
+    launch-prefix = "xterm -e"
+  >
+    <param name="cmd_vel_topic" value="$(arg cmd_vel_topic)" />
+    <param name="max_linear"    value="$(arg max_linear)" />
+    <param name="rate_hz"       value="$(arg rate_hz)" />
+  </node>
+</launch>

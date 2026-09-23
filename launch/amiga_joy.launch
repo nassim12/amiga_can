@@ -1,0 +1,42 @@
+<!-- amiga_joy.launch
+     Joystick teleop for the Amiga — standalone, no ROS joy node needed.
+     Reads directly from /dev/input/jsX and sends CAN RPDO1 frames at 20 Hz.
+
+     Default mapping (Logitech RumblePad 2):
+       Start  (btn 9) : engage AUTO_ACTIVE
+       Select (btn 8) : disengage to MANUAL_READY
+       L1     (btn 4) : dead-man switch (hold to send velocity)
+       Left Y (axis 1): forward / back
+       Right X(axis 2): turn left / right
+
+     Usage:
+       roslaunch amiga_can amiga_joy.launch
+       roslaunch amiga_can amiga_joy.launch device:=/dev/input/js0 max_v:=0.3
+-->
+<launch>
+  <arg name="device"        default="/dev/input/js1" />
+  <arg name="can_channel"   default="can0" />
+  <arg name="can_bitrate"   default="250000" />
+  <arg name="axis_linear"   default="1" />
+  <arg name="axis_angular"  default="2" />
+  <arg name="btn_engage"    default="9" />
+  <arg name="btn_disengage" default="8" />
+  <arg name="btn_deadman"   default="4" />
+  <arg name="max_v"         default="0.4" />
+
+  <node
+    pkg    = "amiga_can"
+    type   = "amiga_joy_teleop.py"
+    name   = "amiga_joy_teleop"
+    output = "screen"
+    args   = "--device $(arg device)
+              --channel $(arg can_channel)
+              --bitrate $(arg can_bitrate)
+              --axis-linear $(arg axis_linear)
+              --axis-angular $(arg axis_angular)
+              --btn-engage $(arg btn_engage)
+              --btn-disengage $(arg btn_disengage)
+              --btn-deadman $(arg btn_deadman)
+              --max-v $(arg max_v)"
+  />
+</launch>

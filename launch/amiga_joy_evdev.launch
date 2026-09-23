@@ -1,0 +1,47 @@
+<!-- amiga_joy.launch
+     Joystick teleop for the Amiga — standalone, no ROS joy node needed.
+     Reads directly from the gamepad via evdev (/dev/input/eventX) and sends
+     CAN RPDO1 frames at 20 Hz.
+
+     Default mapping (Logitech F710, XInput mode):
+       Start  (315) : engage AUTO_ACTIVE
+       Back   (314) : disengage to MANUAL_READY
+       L1     (310) : dead-man switch (hold to send velocity)
+       Left Y (1)   : forward / back
+       Right X(3)   : turn left / right
+
+     The node finds the F710 by name, so the eventX number does not matter.
+
+     Usage:
+       roslaunch amiga_can amiga_joy.launch
+       roslaunch amiga_can amiga_joy.launch device:=/dev/input/event10 max_v:=0.3
+-->
+<launch>
+  <arg name="device"          default="/dev/input/event8" />
+  <arg name="name_hint"       default="F710" />
+  <arg name="can_channel"     default="can0" />
+  <arg name="can_bitrate"     default="250000" />
+  <arg name="code_linear"     default="1" />
+  <arg name="code_angular"    default="0" />  <!-- left stick X for single-stick drive -->
+  <arg name="code_engage"     default="315" />
+  <arg name="code_disengage"  default="314" />
+  <arg name="code_deadman"    default="310" />
+  <arg name="max_v"           default="0.4" />
+
+  <node
+    pkg    = "amiga_can"
+    type   = "amiga_joy_teleop_evdev.py"
+    name   = "amiga_joy_teleop"
+    output = "screen"
+    args   = "--device $(arg device)
+              --name $(arg name_hint)
+              --channel $(arg can_channel)
+              --bitrate $(arg can_bitrate)
+              --code-linear $(arg code_linear)
+              --code-angular $(arg code_angular)
+              --code-engage $(arg code_engage)
+              --code-disengage $(arg code_disengage)
+              --code-deadman $(arg code_deadman)
+              --max-v $(arg max_v)"
+  />
+</launch>
